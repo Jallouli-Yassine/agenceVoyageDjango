@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zxx">
+    <head>
+        <title>Aura trips !</title>
+
+        <!-- lier la page html avec le css pour ajouter le design -->
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'assets/css/vol.css' %}">
+
+        <!-- ajouter une police d'ecriture -->
+        <link href="https://fonts.googleapis.com/css2?family=Acme&display=swap" rel="stylesheet">
+
+        <!-- je prend en compte les accents -->
+        <meta charset="utf-8">
+    </head>
+    <body>
+
+        <!-- Balise pour le haut de page -->
+{% include 'navbar.html' %}
+
+        {% block content %}
+{% endblock %}
+
+
+{% include 'footer.html' %}
+
+    </body>
+</html>
