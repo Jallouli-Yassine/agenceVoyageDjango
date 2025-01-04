@@ -74,7 +74,7 @@ div.destinations-group {
 .philippines { background: url(philippines.jpg); }
 .tunis { background: url(tunis.jpg); }
 
-.overlay { 
+.overlay {
     position: absolute;
     left: 0;
     right: 0;
@@ -143,6 +143,8 @@ header form {
     margin-top: 15px;
 }
 
+
+
 /* Pied de page */
 
 footer p {
@@ -150,3 +152,4 @@ footer p {
     color: #373737;
     padding: 10px;
 }
+

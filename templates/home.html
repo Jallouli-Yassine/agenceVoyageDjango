@@ -1,65 +1,56 @@
-
 {% extends 'index.html' %}
 
 {% block content %}
     {% load static %}
-        <!-- Une section avec les destinations -->
-        <section id="destinations">
-
-            <h3>Nous proposons differentes destinations pour découvrir le monde !</h3>
-
-            <div class="destinations-group">
-                <!-- destination 1 -->
-                <div class="destination-item barcelone">
-                    <div class="overlay">
-                        <span class="prix">Dès 1400Dt</span>
-                        <span class="nom">Barcelone</span>
-                    </div>
+    <!-- Filter form for flights -->
+    <div class="container mt-5">
+        <h1 class="text-primary mb-4">Search for Flights</h1>
+        <form method="get" action="{% url 'home' %}">
+            <div class="row">
+                <div class="col-md-3">
+                    <label style="color: black" for="destination" class="form-label">Destination</label>
+                    <input type="text" class="form-control" id="destination" name="destination" placeholder="Ville d'arrivée">
+                </div>
+                <div class="col-md-3">
+                    <label style="color: black" for="departure_date" class="form-label">Departure Date</label>
+                    <input type="date" class="form-control" id="departure_date" name="departure_date">
                 </div>
 
-                <!-- destination 2 -->
-                <div class="destination-item dubai">
-                    <div class="overlay">
-                        <span class="prix">Dès 1600Dt</span>
-                        <span class="nom">Dubai</span>
-                    </div>
+                <div class="col-md-3">
+                    <label style="color: black" for="num_people" class="form-label">Number of People</label>
+                    <input type="number" class="form-control" id="num_people" name="num_people" min="1" placeholder="Nombre personne">
                 </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Search</button>
+        </form>
+    </div>
 
-                <!-- destination 3 -->
-                <div class="destination-item philippines">
-                    <div class="overlay">
-                        <span class="prix">Dès 2100Dt</span>
-                        <span class="nom">Manille</span>
-                    </div>
-                </div>
+    <!-- Available flights section -->
+    <div class="container mt-5">
+        <h1 class="text-primary mb-4">Available Flights</h1>
 
-                <!-- destination 4 -->
-                <div class="destination-item paris">
-                    <div class="overlay">
-                        <span class="prix">Dès 1100Dt</span>
-                        <span class="nom">Paris</span>
-                    </div>
-                </div>
-
-                <!-- destination 5 -->
-                <div class="destination-item tunis">
-                    <div class="overlay">
-                        <span class="prix">Dès 900Dt</span>
-                        <span class="nom">Tunis</span>
-                    </div>
-                </div>
-
-                <!-- destination 6 -->
-                <div class="destination-item londres">
-                    <div class="overlay">
-                        <span class="prix">Dès 1500Dt</span>
-                        <span class="nom">Londres</span>
+        {% if flights %}
+        <div class="row">
+            {% for flight in flights %}
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">{{ flight.destination }}</h5>
+                        <p class="card-text">
+                            <strong>Departure Date:</strong> {{ flight.departure_date }} <br>
+                            <strong>Price:</strong> ${{ flight.price }} <br>
+                            <strong>Seats Available:</strong> {{ flight.seats_available }} <br>
+                            <strong>Duration:</strong> {{ flight.duration }} days
+                        </p>
+                        <a href="{% url 'reserve_flight' flight.id %}" class="btn btn-primary w-100">Reserve</a>
                     </div>
                 </div>
             </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-center text-muted">No flights available at the moment.</p>
+        {% endif %}
+    </div>
 
-        </section>
-
-        <!-- Pied de page -->
 {% endblock %}
-
