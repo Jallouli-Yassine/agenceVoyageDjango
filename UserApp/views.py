@@ -28,21 +28,23 @@ def home(request):
         flights = flights.filter(seats_available__gte=int(num_people))
 
     # Get the logged-in user's reservations
-    user_id = str("6779ffc2aeaaa328d63d5319")  # Replace with request.user.id for real authentication
-    user_reservations = Reservation.objects.filter(user_id=user_id)
+    user_id = request.session.get('user_id')  # Retrieve the user ID from the session
+    if user_id:
+        user = User.objects.get(id=user_id)  # Get the user object
+        username = user.username  # Retrieve the username
+    else:
+        username = None  # No user is logged in
+
+    user_reservations = Reservation.objects.filter(user_id=user_id) if user_id else []
 
     # Extract the IDs of reserved flights as strings for comparison
     reserved_flight_ids = [str(reservation.flight) for reservation in user_reservations]
 
-    # Debugging
-    print(f"Reserved Flight IDs: {reserved_flight_ids}")
-    print(f"user ID: {user_id}")
-    print(f"Flight IDs in View: {[str(flight.id) for flight in flights]}")
-
-    # Pass flights and reserved_flight_ids to the template
+    # Pass flights, reserved_flight_ids, and username to the template
     return render(request, 'home.html', {
         'flights': flights,
         'reserved_flight_ids': reserved_flight_ids,
+        'username': username,  # Pass the username to the template
     })
 
 
@@ -89,7 +91,11 @@ def login(request):
 
 # Réserver un vol
 #@login_required
-
+def logout(request):
+    """Logs out the user by clearing the session."""
+    request.session.flush()  # Clears all session data, including the user ID
+    messages.success(request, 'You have been logged out.')
+    return redirect('login')  # Redirect the user to the login page after logging out
 
 def reserve_flight(request, flight_id):
     try:
@@ -102,7 +108,7 @@ def reserve_flight(request, flight_id):
     # Check if there are available seats for the flight
     if flight.seats_available > 0:
         # Create the reservation, store the flight ID as a string
-        Reservation(user_id=str("6779ffc2aeaaa328d63d5319"), flight=str(flight.id), reservation_date=date.today()).save()
+        Reservation(user_id=request.session.get('user_id'), flight=str(flight.id), reservation_date=date.today()).save()
 
         # Decrease the number of available seats by 1
         flight.seats_available -= 1
@@ -136,7 +142,7 @@ def cancel_reservation(request, reservation_id):
 
 def my_reservations(request):
     # Get reservations for the current user (adjust user retrieval as needed)
-    reservations = Reservation.objects.filter(user_id="6779ffc2aeaaa328d63d5319")
+    reservations = Reservation.objects.filter(user_id=request.session.get('user_id'))
 
     # Fetch the flight details for each reservation
     reservation_details = []

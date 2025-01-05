@@ -4,6 +4,7 @@ from . import views  # Assuming your views are in views.py in the same app
 urlpatterns = [
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
 
     # Frontoffice
     #path('flights/', views.available_flights, name='available_flights'),

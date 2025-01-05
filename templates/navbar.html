@@ -1,8 +1,20 @@
-        <!-- Balise pour le haut de page -->
-        <header>
-            <!-- Titre de la page -->
-            <h1 class="titre">Aura Trips✈</h1>
+<header>
+    <!-- Titre de la page -->
+    <h1 class="titre">Aura Trips✈</h1>
 
-            <!-- Slogan -->
-            <h3 class="slogan">«La tête dans les nuages !»</h3>
-        </header>
+    <!-- Slogan -->
+    <h3 class="slogan">«La tête dans les nuages !»</h3>
+
+    <!-- Check if username exists, else navigate to login -->
+    {% if username %}
+        <p style="color: #0a53be">Welcome, {{ username }}!</p>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    {% else %}
+        <script>
+            window.location.href = "/user/login";  // Redirect to login page if no username
+        </script>
+    {% endif %}
+</header>
