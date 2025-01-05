@@ -25,32 +25,47 @@
         </form>
     </div>
 
-    <!-- Available flights section -->
-    <div class="container mt-5">
-        <h1 class="text-primary mb-4">Available Flights</h1>
+<div class="container mt-5">
+    <h1 class="text-primary mb-4">Available Flights</h1>
 
-        {% if flights %}
-        <div class="row">
-            {% for flight in flights %}
-            <div class="col-md-4 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title text-success">{{ flight.destination }}</h5>
-                        <p class="card-text">
-                            <strong>Departure Date:</strong> {{ flight.departure_date }} <br>
-                            <strong>Price:</strong> ${{ flight.price }} <br>
-                            <strong>Seats Available:</strong> {{ flight.seats_available }} <br>
-                            <strong>Duration:</strong> {{ flight.duration }} days
-                        </p>
-                        <a href="{% url 'reserve_flight' flight.id %}" class="btn btn-primary w-100">Reserve</a>
-                    </div>
+    {% if flights %}
+    <div class="row">
+        {% for flight in flights %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-success">{{ flight.destination }}</h5>
+                    <p class="card-text">
+                        <strong>Departure Date:</strong> {{ flight.departure_date }} <br>
+                        <strong>Price:</strong> ${{ flight.price }} <br>
+                        <strong>Seats Available:</strong> {{ flight.seats_available }} <br>
+                        <strong>Duration:</strong> {{ flight.duration }} days
+                    </p>
+
+{% if flight.seats_available > 0 and flight.id|stringformat:"s" not in reserved_flight_ids %}
+    <a href="{% url 'reserve_flight' flight.id %}" class="btn btn-primary w-100">Reserve</a>
+{% else %}
+    <button class="btn btn-secondary w-100" disabled>
+        {% if flight.seats_available == 0 %}
+            Fully Booked
+        {% else %}
+            Already Reserved
+        {% endif %}
+    </button>
+{% endif %}
+
                 </div>
             </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <p class="text-center text-muted">No flights available at the moment.</p>
-        {% endif %}
+        {% endfor %}
     </div>
+    {% else %}
+    <p class="text-center text-muted">No flights available at the moment.</p>
+    {% endif %}
+</div>
 
+<!-- Button to Navigate to User Reservations Page -->
+<div class="container mt-5">
+    <a href="{% url 'my_reservations' %}" class="btn btn-info btn-lg w-100">View My Reservations</a>
+</div>
 {% endblock %}

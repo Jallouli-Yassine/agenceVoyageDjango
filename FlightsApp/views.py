@@ -55,19 +55,3 @@ def available_flights(request):
     flights = Flight.objects.filter(seats_available__gt=0)
     return render(request, 'available_flights.html', {'flights': flights})
 
-# Réserver un vol
-#@login_required
-def reserve_flight(request, flight_id):
-    flight = Flight.objects.get(id=flight_id)
-    if flight.seats_available > 0:
-        Reservation(user_id=str(request.user.id), flight=flight, reservation_date=date.today()).save()
-        flight.seats_available -= 1
-        flight.save()
-        return redirect('my_reservations')
-    return redirect('available_flights')
-
-# Mes réservations
-#@login_required
-def my_reservations(request):
-    reservations = Reservation.objects.filter(user_id=str(request.user.id))
-    return render(request, 'my_reservations.html', {'reservations': reservations})
